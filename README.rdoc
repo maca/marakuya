@@ -1,6 +1,6 @@
 = marakuya
 
-Tropicallized markdown.
+Tropicalized markdown.
 
 * Explicit BR tags are kept
 * New lines inside p and li tags are converted to BR tags
