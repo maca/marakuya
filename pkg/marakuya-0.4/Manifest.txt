@@ -1,0 +1,10 @@
+History.txt
+Manifest.txt
+README.rdoc
+Rakefile
+lib/marakuya.rb
+marakuya.gemspec
+script/console
+script/destroy
+script/generate
+spec/marakuya_spec.rb
