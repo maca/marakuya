@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.date = %q{2009-07-15}
   s.description = %q{}
   s.email = ["macarui@gmail.com"]
-  s.extra_rdoc_files = ["History.txt", "Manifest.txt", "PostInstall.txt", "README.rdoc"]
+  s.extra_rdoc_files = ["History.txt", "Manifest.txt", "README.rdoc"]
   s.files = ["History.txt", "Manifest.txt", "PostInstall.txt", "README.rdoc", "Rakefile", "lib/marakuya.rb", "script/console", "script/destroy", "script/generate", "test/test_helper.rb", "test/test_marakuya.rb"]
   s.has_rdoc = true
   s.homepage = %q{Tropicalized markdown.}
