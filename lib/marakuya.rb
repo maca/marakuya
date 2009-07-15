@@ -1,7 +1,7 @@
 require 'rdiscount'
 
 class Marakuya
-  VERSION = '0.0.1'
+  VERSION = '0.4'
 
   def initialize text, opts = {}
     defaults = {:smart => true, :filter_styles => false, :filter_html => true, :fold_lines => false, :generate_toc => false}
