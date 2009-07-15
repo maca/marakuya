@@ -3,8 +3,8 @@ Manifest.txt
 README.rdoc
 Rakefile
 lib/marakuya.rb
+marakuya.gemspec
 script/console
 script/destroy
 script/generate
-test/test_helper.rb
-test/test_marakuya.rb
+spec/marakuya_spec.rb
