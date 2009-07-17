@@ -3,7 +3,7 @@ require 'evil_spambots'
 
 module Marakuya
   extend self
-  VERSION      = '0.4.2'
+  VERSION      = '0.4.4'
   EMAIL_REGEXP = %r{[a-z0-9!\#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!\#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?}
   URL_REGEXP   = %r{
     \b

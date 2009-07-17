@@ -2,6 +2,7 @@ History.txt
 Manifest.txt
 README.rdoc
 Rakefile
+init.rb
 lib/marakuya.rb
 marakuya.gemspec
 script/console
