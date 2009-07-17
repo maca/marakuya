@@ -9,6 +9,7 @@ $hoe = Hoe.new('marakuya', Marakuya::VERSION) do |p|
   p.changes              = p.paragraphs_of("History.txt", 0..1).join("\n\n")
   p.extra_deps         = [
     ['rdiscount','>= 1.3.4'],
+    ['maca-evil_spambots','>= 0.4.2']
   ]
   p.extra_dev_deps = [
     ['newgem', ">= #{::Newgem::VERSION}"]

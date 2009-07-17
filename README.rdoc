@@ -2,14 +2,27 @@
 
 Tropicalized markdown.
 
-* Explicit BR tags are kept
-* New lines inside p and li tags are converted to BR tags
-* References starting with http:// will be auto converted to links
-* more to come, maybe a way to specify css ids and classes
+* Explicit BR tags are kept.
+* New lines inside p and li tags are converted to BR tags.
+* URLs will be auto converted to links.
+* Email addresses will be auto converted to mailto links and obfuscated using javascript (http://hivelogic.com/enkoder/form).
+* Emails will be obfuscated if passing the obfuscate option as true
+* more to come, maybe a way to specify css ids and classes.
+
+Marakuya is framework agnostic but if you use it on rails the +markdown_to_html+ method and it's alias +mk+ will be available to views. It uses Rdiscount to 
+parse markdown and then applies some changes to the results.
+
+== USAGE
+require 'marakuya'
+
+Marakuya.markdown_to_html(markdown)
+Marakuya.markdown_to_html(markdown, :obfuscate => true) # for email obfuscation
+
 
 == REQUIREMENTS:
 
 * rdiscount
+* maca-hivelogic-encoder
 
 == INSTALL:
 

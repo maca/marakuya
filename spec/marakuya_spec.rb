@@ -2,37 +2,9 @@ require File.dirname(__FILE__) + '/../lib/marakuya'
 require 'spec'
 
 describe 'Marakuya' do
-  def md str, opts = {}
-    Marakuya.new( str, opts ).to_html
-  end
+  include Marakuya
   
-  before do
-    @str = 'I like maracuya'
-    @m   = Marakuya.new( @str )
-    @rd  = @m.instance_variable_get(:@rdisc)
-  end
-  
-  describe 'Instatiation' do
-    it "instantiate RDiscount" do
-      @rd.should be_instance_of( RDiscount )
-      @rd.text.should == @str
-    end
-    
-    it "should set defaults" do
-      @rd.smart.should be_true
-      @rd.filter_html.should be_true
-      @rd.fold_lines.should be_nil
-      @rd.filter_styles.should be_nil
-      @rd.fold_lines.should be_nil
-      @rd.generate_toc.should be_nil
-    end
-    
-    it "should override defaults" do
-      m = Marakuya.new( @str, :filter_html => false )
-      m.instance_variable_get(:@rdisc).filter_html.should be_true
-    end
-  end
-  
+
   describe 'Allowed' do
     shared_examples_for 'markdown parser' do
       it "should allow explicit breaks" do
@@ -56,8 +28,20 @@ describe 'Marakuya' do
          #          markdown("Hello <a href='http://example.com' onclick='alert(\"hello!\"); '>An example</a>.").should =~ %r{<a href='http://example.com'>An example</a>}
          #        end
 
-        it "should auto hyperlink URLs" do
-          markdown("Hello http://http://example.com/path/to/file.php. Adios").should == %{<p>Hello <a href="http://http://example.com/path/to/file.php">http://http://example.com/path/to/file.php</a>. Adios</p>\n}
+         it "should autolink emails" do
+           markdown("Hello mail.1@server.com.mx. Hello", :obfuscate => false).should == %{<p>Hello <a href="mailto:mail.1@server.com.mx">mail.1@server.com.mx</a>. Hello</p>\n}
+         end
+         
+         it "should autolink and obfuscate emails" do
+           markdown("Hello mail.1@server.com.mx. Hello", :obfuscate => true).should =~ %r{<noscript>}
+         end
+
+        it "should auto hyperlink URLs leaving a trailing dot" do
+          markdown("Hello http://example.com/path/to/file.php. Adios").should == %{<p>Hello <a href="http://example.com/path/to/file.php">http://example.com/path/to/file.php</a>. Adios</p>\n}
+        end
+
+        it "should auto hyperlink URLs using trailing slash" do
+          markdown("Hello http://example.com/path/to/file.php/. Adios").should == %{<p>Hello <a href="http://example.com/path/to/file.php/">http://example.com/path/to/file.php/</a>. Adios</p>\n}
         end
         
         it "should convert newlines to <br />" do
@@ -77,13 +61,13 @@ describe 'Marakuya' do
     end
     
     describe 'it has html filter' do
-      alias :markdown :md
+      alias :markdown :markdown_to_html
       it_should_behave_like "markdown parser"
     end
     
     describe "it doesn't have html filter" do
-      def markdown str
-        md str, :filter_html => false
+      def markdown str, opts = {}
+        markdown_to_html str, opts.merge(:filter_html => false)
       end
       it_should_behave_like "markdown parser"
     end
