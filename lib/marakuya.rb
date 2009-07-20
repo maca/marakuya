@@ -3,7 +3,7 @@ require 'evil_spambots'
 
 module Marakuya
   extend self
-  VERSION      = '0.4.4'
+  VERSION      = '0.4.6'
   EMAIL_REGEXP = %r{[a-z0-9!\#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!\#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?}
   URL_REGEXP   = %r{
     \b
@@ -36,7 +36,6 @@ module Marakuya
   DEFAULTS    = {:smart => true, :filter_styles => false, :filter_html => true, :fold_lines => false, :generate_toc => false} #Just Rdiscont defaults
   
   public
-  
   # Convert markdown encoded text into html using Rdiscount and in addition it applies some changes:
   # 
   # * Explicit BR tags are kept.
@@ -57,14 +56,20 @@ module Marakuya
   # * generate_toc
   # 
   def markdown_to_html text, opts = {}
+    args = DEFAULTS.collect do |key, val|
+      if opts.key? key
+        key if opts[key]
+      else
+        key if DEFAULTS[key]
+      end
+    end.compact
+    
     obfuscate = opts.delete(:obfuscate)
-    rdisc     = RDiscount.new text, *DEFAULTS.collect{ |key, val| next key if opts[key] and opts.key?(key) or DEFAULTS[key] }.compact
+    rdisc     = RDiscount.new text, *args
     str       = rdisc.to_html
     
-    str.gsub! %r{\s*(<|&lt;)br\s*/?>\s*\n?},  "<br />\n"          # Fix line breaks
-    
+    str.gsub! %r{\s*(<|&lt;)br\s*/?>\s*\n?}, "<br />\n"  unless opts[:filter_html]
     str.gsub! /(\s)(#{ URL_REGEXP })/, '\1<a href="\2">\2</a>'    # Extract hyperlinks
-    
     str.gsub! %r{&lt;a([^\n]*)&lt;/a>}, '<a\1</a>'                # Recover escaped hyperlinks
     
     str.gsub! EMAIL_REGEXP do |email|                          
@@ -74,7 +79,6 @@ module Marakuya
     str.gsub! tag_content_regexp(/p|li/i) do |match| # For contents of paragraph and li change newline for html break tag
       %{<#{ tag = $1 }#{ ' ' + $2 unless $2.empty? }>#{ $3.gsub /(\w)\s*\n(\s*\w)/, "\\1<br />\n\\2" }</#{ tag }>}
     end
-    
     str
   end
   alias :to_html  :markdown_to_html
@@ -85,5 +89,4 @@ module Marakuya
   end
 end
 
-ActionView::Helpers::TextHelper.send(:include, Marakuya) rescue nil
 

@@ -2,3 +2,5 @@
 
 * 1 major enhancement:
   * Initial release
+  
+* Fixed filter_html options

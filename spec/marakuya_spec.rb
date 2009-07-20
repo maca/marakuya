@@ -4,7 +4,6 @@ require 'spec'
 describe 'Marakuya' do
   include Marakuya
   
-
   describe 'Allowed' do
     shared_examples_for 'markdown parser' do
       it "should allow explicit breaks" do
@@ -48,6 +47,10 @@ describe 'Marakuya' do
           markdown("hello\nworld\n\nGoodbye\ncruel\nworld").should == "<p>hello<br />\nworld</p>\n\n<p>Goodbye<br />\ncruel<br />\nworld</p>\n"
         end
       end
+      
+      it "should permit liquid" do
+        markdown("{{ liquid }} {% liquid %}").should == "<p>{{ liquid }} {% liquid %}</p>\n"
+      end
 
       # describe 'attributes' do
       #         it "should allow id in pragraph" do
@@ -63,12 +66,21 @@ describe 'Marakuya' do
     describe 'it has html filter' do
       alias :markdown :markdown_to_html
       it_should_behave_like "markdown parser"
+      
+      it "should not allow html" do
+        markdown("<div></div>").should == "<p>&lt;div>&lt;/div></p>\n"
+      end
     end
     
     describe "it doesn't have html filter" do
       def markdown str, opts = {}
         markdown_to_html str, opts.merge(:filter_html => false)
       end
+      
+      it "should allow html" do
+        markdown("<div></div>").should == "<div></div>\n\n"
+      end
+      
       it_should_behave_like "markdown parser"
     end
   end
