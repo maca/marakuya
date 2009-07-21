@@ -3,12 +3,16 @@ require 'evil_spambots'
 
 module Marakuya
   extend self
-  VERSION      = '0.4.6'
+  VERSION      = '0.4.9'
   EMAIL_REGEXP = %r{[a-z0-9!\#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!\#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?}
   URL_REGEXP   = %r{
     \b
     (?:
-      (?:http)://[-\w]+(?:\.\w[-\w]*)+
+      (?-i: http 
+          | https
+          | ftp
+      )
+      ://[-\w]+(?:\.\w[-\w]*)+
     |
       (?i: [a-z0-9] (?:[-a-z0-9]*[a-z0-9])? \. )+
       (?-i: com\b
@@ -33,7 +37,7 @@ module Marakuya
   }ix
   
   private
-  DEFAULTS    = {:smart => true, :filter_styles => false, :filter_html => true, :fold_lines => false, :generate_toc => false} #Just Rdiscont defaults
+  DEFAULTS = {:smart => true, :filter_styles => false, :filter_html => true, :fold_lines => false, :generate_toc => false} #Rdiscont defaults
   
   public
   # Convert markdown encoded text into html using Rdiscount and in addition it applies some changes:
@@ -47,14 +51,14 @@ module Marakuya
   # Options:
   # 
   # * obfuscate: +boolean+
-  #   when it will obfuscate the email addresses to protectect them from spambot harvesting
+  #   when it will obfuscate the email addresses to protectect them from spambot harvesting, defaults to false
   # * smart: +boolean+
   #   whether or not to use smart quoutation marks (auto closing), defaults to true
   # * filter_html +boolean+
   #   whether or not it will escape existing html, defaults to true
   # * fold_lines
   # * generate_toc
-  # 
+  #
   def markdown_to_html text, opts = {}
     args = DEFAULTS.collect do |key, val|
       if opts.key? key
@@ -72,20 +76,21 @@ module Marakuya
     str.gsub! /(\s)(#{ URL_REGEXP })/, '\1<a href="\2">\2</a>'    # Extract hyperlinks
     str.gsub! %r{&lt;a([^\n]*)&lt;/a>}, '<a\1</a>'                # Recover escaped hyperlinks
     
-    str.gsub! EMAIL_REGEXP do |email|                          
-      obfuscate ? EvilSpambots.obfuscate_email(email) : %{<a href="mailto:#{ $~ }">#{ $~ }</a>}
+    str.gsub! EMAIL_REGEXP do |email|
+      obfuscate ? EvilSpambots.obfuscate_email(email) : %{<a href="mailto:#{ email }">#{ email }</a>}
     end
     
-    str.gsub! tag_content_regexp(/p|li/i) do |match| # For contents of paragraph and li change newline for html break tag
-      %{<#{ tag = $1 }#{ ' ' + $2 unless $2.empty? }>#{ $3.gsub /(\w)\s*\n(\s*\w)/, "\\1<br />\n\\2" }</#{ tag }>}
+    str.gsub! tag_content_regexp(/p|li/) do |tag|
+      %{<#{ tag = $1 }>#{ $2.gsub /(\w)\s*\n(\s*\w)/, "\\1<br />\n\\2" }</#{ tag }>}
     end
+    
     str
   end
-  alias :to_html  :markdown_to_html
-  alias :mk       :markdown_to_html
+  alias :to_html   :markdown_to_html
+  alias :markdown  :markdown_to_html
   
   def tag_content_regexp tag
-    %r{<(#{ tag })(?:\s*([^>]*))>(\n?(?:.*\n|.*)+?)</#{ tag }>}i
+    %r{<(#{ tag })[^>]*>((?:.|\n)*?)</\1>}
   end
 end
 

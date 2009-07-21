@@ -1,3 +1,4 @@
+require 'rubygems'
 require File.dirname(__FILE__) + '/../lib/marakuya'
 require 'spec'
 
@@ -50,6 +51,10 @@ describe 'Marakuya' do
       
       it "should permit liquid" do
         markdown("{{ liquid }} {% liquid %}").should == "<p>{{ liquid }} {% liquid %}</p>\n"
+      end
+      
+      it "should not freeze" do
+        markdown( File.new("#{ File.dirname(__FILE__) }/page.html").read )
       end
 
       # describe 'attributes' do

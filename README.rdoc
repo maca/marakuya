@@ -9,20 +9,19 @@ Tropicalized markdown.
 * Emails will be obfuscated if passing the obfuscate option as true
 * more to come, maybe a way to specify css ids and classes.
 
-Marakuya is framework agnostic but if you use it on rails the +markdown_to_html+ method and it's alias +mk+ will be available to views. It uses Rdiscount to 
-parse markdown and then applies some changes to the results.
+Marakuya is framework agnostic but works with Rails.
 
 == USAGE
 require 'marakuya'
 
-Marakuya.markdown_to_html(markdown)
-Marakuya.markdown_to_html(markdown, :obfuscate => true) # for email obfuscation
+Marakuya.markdown(markdown)
+Marakuya.markdown(markdown, :obfuscate => true) # for email obfuscation
 
 
 == REQUIREMENTS:
 
 * rdiscount
-* maca-hivelogic-encoder
+* maca-evil_spambots
 
 == INSTALL:
 
