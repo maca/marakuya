@@ -3,7 +3,7 @@ require 'evil_spambots'
 
 module Marakuya
   extend self
-  VERSION      = '0.4.9'
+  VERSION      = '0.5'
   EMAIL_REGEXP = %r{[a-z0-9!\#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!\#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?}
   URL_REGEXP   = %r{
     \b
@@ -90,7 +90,7 @@ module Marakuya
   alias :markdown  :markdown_to_html
   
   def tag_content_regexp tag
-    %r{<(#{ tag })[^>]*>((?:.|\n)*?)</\1>}
+    %r{<(#{ tag })>((?:.|\n)*?)</\1>}
   end
 end
 
